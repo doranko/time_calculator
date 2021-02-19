@@ -44,6 +44,7 @@ class TestTashizan(unittest.TestCase):
 		actual = tc.sub_time('100:30', '2:40')
 		expected = '97:50'
 		self.assertEqual(expected, actual)
+		# 引く時間の方が大きい場合は差分が負の数で返る
 		actual = tc.sub_time('1:30', '2:15')
 		expected = '-0:45'
 		self.assertEqual(expected, actual)
@@ -54,6 +55,19 @@ class TestTashizan(unittest.TestCase):
 		actual = tc.div_time('1:01', 3)
 		expected = '0:21'
 		self.assertEqual(expected, actual)
+
+	# 時間表記文字列を比較
+	# e.g. '1:00', '2:00' -> -1
+	def test_comp_time_str(self):
+		# 第一引数の方が大きい場合は正
+		actual = tc.comp_time_str('1:00', '0:59')
+		self.assertTrue(actual > 0)
+		# 第二引数の方が大きい場合は負
+		actual = tc.comp_time_str('0:59', '1:00')
+		self.assertTrue(actual < 0)
+		# どちらも同じ場合は 0
+		actual = tc.comp_time_str('1:00', '1:00')
+		self.assertEqual(0, actual)
 
 if __name__ == "__main__":
 	unittest.main()
